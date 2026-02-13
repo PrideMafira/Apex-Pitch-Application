@@ -47,7 +47,7 @@ struct SignIn: View {
 
                 }
                 NavigationLink {
-//                    SignUp()
+                    SignUp()
                 } label: {
                     Text("Log In")
                         .padding()
