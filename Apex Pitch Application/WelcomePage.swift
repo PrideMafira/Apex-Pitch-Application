@@ -29,7 +29,7 @@ struct WelcomePage: View {
             .padding()
             
             NavigationLink {
-//               SignIn_Page()
+               SignIn()
             } label: {
                 Text("Get Started!")
                     .padding()
