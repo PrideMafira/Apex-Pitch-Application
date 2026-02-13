@@ -133,7 +133,7 @@ struct TabPage: View {
                 
                 // --- Add Idea Button ---
                 NavigationLink {
-                    //                    addIdeaPage(ideas: $ideas)
+                        addIdeaPage(ideas: $ideas)
                 } label: {
                     HStack {
                         Image(systemName: "plus.circle.fill")
