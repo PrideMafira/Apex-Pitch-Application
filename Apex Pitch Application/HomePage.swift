@@ -17,7 +17,7 @@ struct HomePage: View {
                 Spacer()
       
                 NavigationLink {
-//                    TabPage()
+                    TabPage()
                 } label: {
                     Text("Add idea")
                         .font(.title2)
