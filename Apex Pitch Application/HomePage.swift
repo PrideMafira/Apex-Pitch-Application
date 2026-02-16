@@ -45,8 +45,7 @@ struct HomePage: View {
                 Spacer()
                 
                 NavigationLink {
-//                    Meetings(showWebView: "https://zoom.us/signin")
-//                    Zoom_Meetings_Page(showWebView: "https://zoom.us/signin")
+                    meetingsPage(showWebView: "https://zoom.us/signin")
                 } label: {
                     Text("Meetings")
                         .font(.title2)
