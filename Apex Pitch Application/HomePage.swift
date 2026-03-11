@@ -68,7 +68,7 @@ struct HomePage: View {
                                 .aspectRatio(contentMode: .fit)
                                 .frame(width: 40, height: 40)
                                 .padding()
-                                .foregroundStyle(.black)
+                                .foregroundStyle(.yellow)
                                 .padding()
                         }
                         .offset(x: 150)
