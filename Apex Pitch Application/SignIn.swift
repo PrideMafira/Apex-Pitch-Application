@@ -72,20 +72,16 @@ struct SignIn: View {
                     }
                     .padding(.top, 8)
                 }
-                
-                // Sign In Button
-                Button(action: {
-                    //b Login action
-                }) {
-                    Text("Sign In")
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 16)
-                        .background(
-                            RoundedRectangle(cornerRadius: 8)
-                                .fill(Color.blue)
-                        )
+                NavigationLink {
+                    SignUp()
+                } label: {
+                    Text("Log In")
+                        .padding()
+                        .font(.caption)
+                        .background(Color.blue)
+                        .foregroundStyle(.white)
+                        .cornerRadius(10)
+                        .buttonStyle(.bordered)
                 }
                 .padding(.top, 16)
                 
