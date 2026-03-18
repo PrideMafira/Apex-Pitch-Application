@@ -10,41 +10,67 @@ import SwiftUI
 struct SignIn: View {
     @State private var email = ""
     @State private var password = ""
-    @State private var showPassword = false
-    @State private var goToSignUpPage = false
-    //    @State private var isLoggedIn = false
-    //    @State private var showAlert = false
-    //    @State private var alertMessage = ""
-    //    @State private var forgotPassword = false
+    @State private var rememberMe = false
     
     var body: some View {
-
-            NavigationStack {
-                VStack {
-                    Text("Login")
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
+        NavigationStack{
+            VStack(alignment: .leading, spacing: 50) {
+                // Header
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Sign In")
+                        .font(.system(size: 34, weight: .bold))
                     
-                    Text("Enter your details to login into your account!")
-                    
-                        .padding()
-                    
-                   
-                    VStack {
-
-                            TextField("Enter your email address", text: $email)
-                                .textFieldStyle(RoundedBorderTextFieldStyle())
-                                .cornerRadius(3)
-                                .padding()
+                    Text("Enter your credentials to access your account")
+                        .font(.system(size: 18))
+                        .foregroundColor(.secondary)
+                }
+                .padding(.top, 50)
+                
+                // Form Fields
+                VStack(spacing: 20) {
+                    // Email Field
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Email")
+                            .font(.system(size: 16, weight: .medium))
+                            .foregroundColor(.secondary)
                         
-                        TextField("Enter your password", text: $password)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .cornerRadius(3)
+                        TextField("your@email.com", text: $email)
+                            .textFieldStyle(PlainTextFieldStyle())
+                            .keyboardType(.emailAddress)
+                            .autocapitalization(.none)
                             .padding()
+                            .background(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+                            )
+                    }
+                    
+                    // Password Field
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Password")
+                            .font(.system(size: 16, weight: .medium))
+                            .foregroundColor(.secondary)
+                        
+                        SecureField("••••••••", text: $password)
+                            .textFieldStyle(PlainTextFieldStyle())
+                            .padding()
+                            .background(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+                            )
+                    }
+                    
+                    // Remember Me & Forgot Password
+                    HStack {
+                        Toggle(isOn: $rememberMe) {
+                            Text("Remember me")
+                                .font(.system(size: 16))
+                                .foregroundColor(.secondary)
+                        }
+                        Spacer()
                         
                     }
-                    .padding()
-
+                    .padding(.top, 8)
                 }
                 NavigationLink {
                     SignUp()
@@ -57,35 +83,36 @@ struct SignIn: View {
                         .cornerRadius(10)
                         .buttonStyle(.bordered)
                 }
-                .padding()
+                .padding(.top, 16)
+                
+                Spacer()
+                
+                // Sign Up Link
                 HStack {
-                    Text("dont have an account?                  ")
-                        .padding(30)
-                    Spacer()
+                    Text("Don't have an account?")
+                        .font(.system(size: 14))
+                        .foregroundColor(.secondary)
                     
-                    Button("Sign up") {
-                        goToSignUpPage = true
-                        
+                    
+                    // Sign up action
+                    NavigationLink {
+                        //                        SignUp()
+                    }label: {
+                        Text("Create an account")
                     }
-        //                Spacer()
-        //                .padding()
-                    .offset(x: -87, y: 0)
                     
+                    .font(.system(size: 14, weight: .medium))
+                    .foregroundColor(.blue)
                 }
-                .padding()
-                
-    //            HStack {
-    //                if showPassword {
-    //                    TextField("Password", text: $password)
-    //            } else {
-    //                SecureField("Password", text: $password)
-    //            }
-    //            }
-                
+                .frame(maxWidth: .infinity)
             }
+            .padding(.horizontal, 24)
+            .padding(.bottom, 20)
+            
         }
+    }
+    
 }
-
 #Preview {
     SignIn()
 }
