@@ -73,9 +73,10 @@ struct SignIn: View {
                     .padding(.top, 8)
                 }
                 NavigationLink {
-                    SignUp()
+                    HomePage()
                 } label: {
                     Text("Log In")
+                        .frame(width: 340)
                         .padding()
                         .font(.caption)
                         .background(Color.blue)
@@ -96,7 +97,7 @@ struct SignIn: View {
                     
                     // Sign up action
                     NavigationLink {
-                        //                        SignUp()
+                        SignUp()
                     }label: {
                         Text("Create an account")
                     }
