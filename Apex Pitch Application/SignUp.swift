@@ -93,7 +93,7 @@ struct SignUp: View {
                     
                     //Navigation to Pages
                     NavigationLink {
-//                                HomePage()
+                                HomePage()
                     }label: {
                         Text("Sign Up")
                             .frame(width: 340)
@@ -127,17 +127,6 @@ struct SignUp: View {
                 }
                 .padding()
                 
-                NavigationLink {
-                    HomePage()
-                } label: {
-                    Text("Sign up")
-                        .padding()
-                        .font(.caption)
-                        .background(Color.blue)
-                        .foregroundStyle(.white)
-                        .cornerRadius(10)
-                        .buttonStyle(.bordered)
-                }
             }
         }
     }
