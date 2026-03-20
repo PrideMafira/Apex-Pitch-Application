@@ -126,7 +126,18 @@ struct SignUp: View {
                     Spacer()
                 }
                 .padding()
-                .background(Color.white)
+                
+                NavigationLink {
+                    HomePage()
+                } label: {
+                    Text("Sign up")
+                        .padding()
+                        .font(.caption)
+                        .background(Color.blue)
+                        .foregroundStyle(.white)
+                        .cornerRadius(10)
+                        .buttonStyle(.bordered)
+                }
             }
         }
     }
