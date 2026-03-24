@@ -65,21 +65,23 @@ struct Settings: View {
                   }
               }
               .navigationTitle("Settings")
+              
+              NavigationLink {
+                 HomePage()
+              } label: {
+                  Image(systemName: "house")
+                      .resizable()
+                      .aspectRatio(contentMode: .fit)
+                      .frame(width: 40, height: 40)
+                      .padding()
+                      .foregroundStyle(.blue)
+                      .padding()
+              }
+              .offset(x: -150, y: 20)
+              Spacer()
+              .preferredColorScheme(darkMode ? .dark : .light)
           }
-          NavigationLink {
-             HomePage()
-          } label: {
-              Image(systemName: "house")
-                  .resizable()
-                  .aspectRatio(contentMode: .fit)
-                  .frame(width: 40, height: 40)
-                  .padding()
-                  .foregroundStyle(.blue)
-                  .padding()
-          }
-          .offset(x: -150, y: 20)
-          Spacer()
-          .preferredColorScheme(darkMode ? .dark : .light)
+         
       }
 }
 
