@@ -60,14 +60,14 @@ struct HomePage: View {
                 
 
                         NavigationLink {
-//                            Settings_Page()
+                            Settings()
                         } label: {
                             Image(systemName: "gearshape.2")
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .frame(width: 40, height: 40)
                                 .padding()
-                                .foregroundStyle(.yellow)
+                                .foregroundStyle(.blue)
                                 .padding()
                         }
                         .offset(x: 150)
