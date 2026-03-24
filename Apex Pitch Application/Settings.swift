@@ -34,6 +34,7 @@ struct Settings: View {
                       Toggle(isOn: $notificationsEnabled) {
                           Label("Notifications", systemImage: "bell")
                       }
+                      .toggleStyle(SwitchToggleStyle(tint: .blue))
                       
                      
   
