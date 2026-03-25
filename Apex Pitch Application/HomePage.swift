@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct HomePage: View {
+    @AppStorage("darkMode") var darkMode: Bool = false
     var body: some View {
         NavigationStack {
             VStack {
@@ -78,10 +79,8 @@ struct HomePage: View {
             }
             .navigationTitle("Apex Pitch")
             .navigationSubtitle("Track your startup ideas.")
-            
-            
-            
         }
+        .preferredColorScheme(darkMode ? .dark : .light)
     }
 }
 

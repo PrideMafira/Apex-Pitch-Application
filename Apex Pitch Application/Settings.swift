@@ -8,7 +8,7 @@ import SwiftUI
 
 struct Settings: View {
     @State private var notificationsEnabled = true
-      @State private var darkMode = false
+    @AppStorage("darkMode") var darkMode: Bool = false
   
       var body: some View {
           NavigationStack {
