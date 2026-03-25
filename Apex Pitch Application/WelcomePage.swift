@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct WelcomePage: View {
+    @AppStorage("darkMode") var darkMode: Bool = false
     var body: some View {
         NavigationStack {
             VStack {
@@ -41,6 +42,7 @@ struct WelcomePage: View {
                     .padding()
             }
         }
+        .preferredColorScheme(darkMode ? .dark : .light)
     }
 }
 
