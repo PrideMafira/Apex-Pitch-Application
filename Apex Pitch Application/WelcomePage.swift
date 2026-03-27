@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct WelcomePage: View {
+    @ObservedObject var authViewModel: AuthViewModel
     @AppStorage("darkMode") var darkMode: Bool = false
+    
     var body: some View {
         NavigationStack {
             VStack {
@@ -21,8 +23,6 @@ struct WelcomePage: View {
                 Text("Welcome to Apex Pitch")
                     .font(.largeTitle)
                     .bold()
-//                    .padding()
-                
                 Text("From first idea to First Investor!")
                     .font(.system(size: 23))
                     .padding()
@@ -30,7 +30,7 @@ struct WelcomePage: View {
             .padding()
             
             NavigationLink {
-               SignIn()
+                SignIn(authViewModel: authViewModel)
             } label: {
                 Text("Get Started!")
                     .padding()
@@ -47,5 +47,5 @@ struct WelcomePage: View {
 }
 
 #Preview {
-    WelcomePage()
+    WelcomePage(authViewModel: AuthViewModel())
 }

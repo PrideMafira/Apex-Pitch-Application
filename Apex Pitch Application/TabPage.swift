@@ -30,7 +30,7 @@ struct TabPage: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                // --- Top Tab Bar ---
+                //MARK: Top Tab Bar
                 HStack {
                     ForEach(tabs, id: \.self) { tab in
                         Button {
@@ -54,7 +54,7 @@ struct TabPage: View {
                 .background(Color(.systemGray6))
                 .shadow(radius: 1)
                 
-                // --- Display Selected View ---
+                //MARK: Display Selected View
                 if filteredIdeas.isEmpty {
                     VStack {
                         Spacer()
@@ -103,7 +103,7 @@ struct TabPage: View {
                                         
                                         Spacer()
                                         
-                                        // Progress indicator
+                                        //MARK: Progress indicator
                                         let goal = Double(idea.fundingGoal) ?? 0
                                         let raised = Double(idea.fundingRaised) ?? 0
                                         let progress = goal > 0 ? raised / goal : 0
@@ -131,9 +131,9 @@ struct TabPage: View {
                     }
                 }
                 
-                // --- Add Idea Button ---
+                //MARK: Add Idea Button
                 NavigationLink {
-                        addIdeaPage(ideas: $ideas)
+                    addIdeaPage(ideas: $ideas)
                 } label: {
                     HStack {
                         Image(systemName: "plus.circle.fill")
@@ -154,13 +154,11 @@ struct TabPage: View {
             .navigationBarTitleDisplayMode(.inline)
         }
     }
-    // Computed property for filtered ideas
+    //MARK: Computed property for filtering ideas
     private var filteredIdeas: [Idea] {
         ideas.filter { $0.type == selectedTab }
     }
 }
-
-
 
 
 // MARK: - Idea needs to conform to Identifiable

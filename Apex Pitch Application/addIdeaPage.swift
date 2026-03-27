@@ -91,7 +91,7 @@ struct addIdeaPage: View {
         }
     }
     
-    // Computed property to validate form
+    //MARK: Computed property to validate form
     private var isFormValid: Bool {
         !startupName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
         !description.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&

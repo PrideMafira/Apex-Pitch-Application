@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SignUp: View {
-
+    @ObservedObject var authViewModel: AuthViewModel
     @State private var fullName = ""
     @State private var email = ""
     @State private var password = ""
@@ -17,11 +17,8 @@ struct SignUp: View {
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading, spacing: 10) {
-                
-                //Header
+                //MARK: Header
                 VStack(alignment: .leading, spacing: 10) {
-                    //                Spacer()
-                    
                     Text("Create Account")
                         .font(.largeTitle)
                         .fontWeight(.bold)
@@ -32,105 +29,127 @@ struct SignUp: View {
                         .foregroundColor(.secondary)
                 }
             }
-                    .padding(.top, 25)
-                
+            .padding(.top, 25)
+            
             //Textfields
-                VStack(spacing: 20) {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Full Name")
-                            .font(.system(size: 16, weight: .medium))
-                            .foregroundColor(.secondary)
-                        TextField("Enter your name", text: $fullName)
-                            .textFieldStyle(PlainTextFieldStyle())
-                            .autocapitalization(.none)
-                            .padding()
-                            .background(
-                                RoundedRectangle(cornerRadius: 8)
-                                    .stroke(Color.gray.opacity(0.3), lineWidth: 1))
-                    }
-                    
-                    //email textfield
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Email")
-                            .font(.system(size: 16, weight: .medium))
-                            .foregroundColor(.secondary)
-                        TextField("your@email.com", text: $email)
-                            .autocapitalization(.none)
-                            .padding()
-                            .background(
-                                RoundedRectangle(cornerRadius: 8)
-                                    .stroke(Color.gray.opacity(0.3), lineWidth: 1))
-                    }
-                    
-                    //Password
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Password")
-                            .font(.system(size: 16, weight: .medium))
-                            .foregroundColor(.secondary)
-                        SecureField("••••••••", text: $password)
-                            .textFieldStyle(PlainTextFieldStyle())
-                            .autocapitalization(.none)
-                            .padding()
-                            .background(
-                                RoundedRectangle(cornerRadius: 8)
-                                    .stroke(Color.gray.opacity(0.3), lineWidth: 1))
-                    }
-                    
-                    //Passwords (re-enter)
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Confirm Password")
-                            .font(.system(size: 16, weight: .medium))
-                            .foregroundColor(.secondary)
-                        SecureField("••••••••", text: $confirmPassword)
-                            .textFieldStyle(PlainTextFieldStyle())
-                            .autocapitalization(.none)
-                            .padding()
-                            .background(
-                                RoundedRectangle(cornerRadius: 8)
-                                    .stroke(Color.gray.opacity(0.3), lineWidth: 1))
-                    }
-                    
-                    
-                    //Navigation to Pages
-                    NavigationLink {
-                                HomePage()
-                    }label: {
-                        Text("Sign Up")
-                            .frame(width: 340)
-                            .padding()
-                            .font(.caption)
-                            .background(Color.blue)
-                            .foregroundStyle(.white)
-                            .cornerRadius(10)
-                            .buttonStyle(.bordered)
-                    }
-                    .padding(.top, 10)
-                    
-                    //Navigation to login page
-                    HStack {
-                        Text("Already have an account?")
-                        
-                        NavigationLink {
-                                SignIn()
-                        }label: {
-                            Text("Login")
-                        }
-                        .font(.system(size: 14, weight: .medium))
-                        .foregroundColor(.blue)
-                        .fontWeight(.semibold)
-                    }
-                    .font(.footnote)
-                    .foregroundColor(.gray)
-                    .offset(y: 20)
-                    
-                    Spacer()
+            VStack(spacing: 20) {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Full Name")
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundColor(.secondary)
+                    TextField("Enter your name", text: $fullName)
+                        .textFieldStyle(PlainTextFieldStyle())
+                        .autocapitalization(.none)
+                        .padding()
+                        .background(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color.gray.opacity(0.3), lineWidth: 1))
                 }
-                .padding()
                 
+                //email textfield
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Email")
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundColor(.secondary)
+                    TextField("your@email.com", text: $email)
+                        .autocapitalization(.none)
+                        .padding()
+                        .background(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color.gray.opacity(0.3), lineWidth: 1))
+                }
+                
+                //Password
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Password")
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundColor(.secondary)
+                    SecureField("••••••••", text: $password)
+                        .textFieldStyle(PlainTextFieldStyle())
+                        .autocapitalization(.none)
+                        .padding()
+                        .background(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color.gray.opacity(0.3), lineWidth: 1))
+                }
+                
+                //Passwords (re-enter)
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Confirm Password")
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundColor(.secondary)
+                    SecureField("••••••••", text: $confirmPassword)
+                        .textFieldStyle(PlainTextFieldStyle())
+                        .autocapitalization(.none)
+                        .padding()
+                        .background(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color.gray.opacity(0.3), lineWidth: 1))
+                }
+                
+                //            MARK: Button to signUp
+                Button("Sign up"){
+                    Task {
+                        await authViewModel.signUp(email: email, password: password)
+                    }
+                }
+                .frame(maxWidth: .infinity)
+                .padding()
+                .font(.callout)
+                .foregroundStyle(.white)
+                .background(Color.blue)
+                .cornerRadius(10)
+                .contentShape(Rectangle())
+                .buttonStyle(.plain)
+                
+                //                 Show a loading indicator while the sign-up request is in progress.
+                //                if authViewModel.isLoading {
+                //                    ProgressView()
+                //                        .tint(.blue)
+                //                }
+                
+                // Show the status text only when a message is available.
+                if let statusMessage = authViewModel.statusMessage {
+                    Text(statusMessage)
+                        .font(.footnote)
+                        .multilineTextAlignment(.center)
+                        .foregroundColor(.blue)
+                        .padding(.horizontal)
+                }
+                
+                // Show the error text only when the view model provides one.
+                if let error = authViewModel.errorMessage {
+                    Text(error)
+                        .font(.footnote)
+                        .multilineTextAlignment(.center)
+                        .foregroundColor(.red)
+                        .padding(.horizontal)
+                }
+                
+                //MARK: Navigation to SignIn page
+                HStack {
+                    Text("Already have an account?")
+                    
+                    NavigationLink {
+                        SignIn(authViewModel: authViewModel)
+                    }label: {
+                        Text("Login")
+                    }
+                    .font(.system(size: 14, weight: .medium))
+                    .foregroundColor(.blue)
+                    .fontWeight(.semibold)
+                }
+                .font(.footnote)
+                .foregroundColor(.gray)
+                .offset(y: 20)
+                
+                Spacer()
             }
+            .padding()
         }
     }
+}
 
 #Preview {
-    SignUp()
+    SignUp(authViewModel: AuthViewModel())
 }
