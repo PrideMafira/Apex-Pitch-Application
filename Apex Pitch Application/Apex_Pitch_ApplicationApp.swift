@@ -11,7 +11,7 @@ import SwiftUI
 struct Apex_Pitch_ApplicationApp: App {
     var body: some Scene {
         WindowGroup {
-            WelcomePage()
+            ContentView()
         }
     }
 }

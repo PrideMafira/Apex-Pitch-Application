@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct SignIn: View {
+    @ObservedObject var authViewModel: AuthViewModel
     @State private var email = ""
     @State private var password = ""
     @State private var rememberMe = false
@@ -15,7 +16,7 @@ struct SignIn: View {
     var body: some View {
         NavigationStack{
             VStack(alignment: .leading, spacing: 50) {
-                // Header
+                // MARK: Header
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Sign In")
                         .font(.system(size: 34, weight: .bold))
@@ -26,7 +27,7 @@ struct SignIn: View {
                 }
                 .padding(.top, 50)
                 
-                // Form Fields
+                // MARK: Form Fields
                 VStack(spacing: 20) {
                     // Email Field
                     VStack(alignment: .leading, spacing: 8) {
@@ -60,48 +61,52 @@ struct SignIn: View {
                             )
                     }
                     
-                    // Remember Me & Forgot Password
-                    HStack {
-                        Toggle(isOn: $rememberMe) {
-                            Text("Remember me")
-                                .font(.system(size: 16))
-                                .foregroundColor(.secondary)
-                        }
-                        Spacer()
-                        
-                    }
                     .padding(.top, 8)
                 }
-                NavigationLink {
-                    HomePage()
-                } label: {
-                    Text("Log In")
-                        .frame(width: 340)
-                        .padding()
-                        .font(.caption)
-                        .background(Color.blue)
-                        .foregroundStyle(.white)
-                        .cornerRadius(10)
-                        .buttonStyle(.bordered)
+                
+                //MARK: Login
+                Button("Log in") {
+                    Task {
+                        await authViewModel.signIn(email: email, password: password)
+                    }
                 }
-                .padding(.top, 16)
+                .frame(maxWidth: .infinity)
+                .padding()
+                .font(.callout)
+                .foregroundStyle(.white)
+                .background(Color.blue)
+                .cornerRadius(10)
+                .contentShape(Rectangle())
+                .buttonStyle(.plain)
+                
+                if authViewModel.isLoading {
+                    ProgressView()
+                        .tint(.white)
+                }
+                
+                if let errorMessage = authViewModel.errorMessage {
+                    Text(errorMessage)
+                        .font(.footnote)
+                        .multilineTextAlignment(.center)
+                        .foregroundColor(.red)
+                        .padding(.horizontal)
+                    
+                }
                 
                 Spacer()
                 
-                // Sign Up Link
+                //MARK: Link to the sign up page if not a user
                 HStack {
                     Text("Don't have an account?")
                         .font(.system(size: 14))
                         .foregroundColor(.secondary)
                     
-                    
-                    // Sign up action
+                    //MARK: link to the sign up page
                     NavigationLink {
-                        SignUp()
+                        SignUp(authViewModel: authViewModel)
                     }label: {
                         Text("Create an account")
                     }
-                    
                     .font(.system(size: 14, weight: .medium))
                     .foregroundColor(.blue)
                 }
@@ -109,15 +114,13 @@ struct SignIn: View {
             }
             .padding(.horizontal, 24)
             .padding(.bottom, 20)
-            
         }
+        
     }
-    
 }
 #Preview {
-    SignIn()
+    SignIn(authViewModel: AuthViewModel())
 }
-
 
 
 
