@@ -7,84 +7,86 @@
 import SwiftUI
 
 struct Settings: View {
+    @ObservedObject var authViewModel: AuthViewModel
     @State private var notificationsEnabled = true
     @AppStorage("darkMode") var darkMode: Bool = false
-  
-      var body: some View {
-          NavigationStack {
-              Form {
-  
-                  // Account Section
-                  Section(header: Text("Account")) {
-                      HStack {
-                          Image(systemName: "person.circle")
-                              .foregroundStyle(.primary)
-                          Text("Profile")
-                      }
-  
-                      HStack {
-                          Image(systemName: "lock")
-                              .foregroundStyle(.primary)
-                          Text("Change Password")
-                      }
-                  }
-  
-                  // Preferences Section
-                  Section(header: Text("Preferences")) {
-                      Toggle(isOn: $notificationsEnabled) {
-                          Label("Notifications", systemImage: "bell")
-                      }
-                      .toggleStyle(SwitchToggleStyle(tint: .blue))
-                      
-                     
-  
-                      Toggle(isOn: $darkMode) {
-                          Label("Dark Mode", systemImage: "moon")
-                      }
-                      .toggleStyle(SwitchToggleStyle(tint: .blue))
-                  }
-
-  
-                  // About Section
-                  Section(header: Text("About")) {
-                      HStack {
-                          Text("Version")
-                          Spacer()
-                          Text("1.0.0")
-                              .foregroundStyle(.secondary)
-                      }
-                  }
-  
-                  // Logout Section
-                  Section {
-                      Button(role: .destructive) {
-                          // Handle logout
-                      } label: {
-                          Text("Log Out")
-                      }
-                  }
-              }
-              .navigationTitle("Settings")
-              
-              NavigationLink {
-                 HomePage()
-              } label: {
-                  Image(systemName: "house")
-                      .resizable()
-                      .aspectRatio(contentMode: .fit)
-                      .frame(width: 40, height: 40)
-                      .padding()
-                      .foregroundStyle(.blue)
-                      .padding()
-              }
-              .offset(x: -150, y: 20)
-              Spacer()
-              .preferredColorScheme(darkMode ? .dark : .light)
-          }
-         
-      }
+    
+    var body: some View {
+        NavigationStack {
+            Form {
+                
+                // Account Section
+                Section(header: Text("Account")) {
+                    HStack {
+                        Image(systemName: "person.circle")
+                            .foregroundStyle(.primary)
+                        Text("Profile")
+                    }
+                    
+                    HStack {
+                        Image(systemName: "lock")
+                            .foregroundStyle(.primary)
+                        Text("Change Password")
+                    }
+                }
+                
+                // Preferences Section
+                Section(header: Text("Preferences")) {
+                    Toggle(isOn: $notificationsEnabled) {
+                        Label("Notifications", systemImage: "bell")
+                    }
+                    .toggleStyle(SwitchToggleStyle(tint: .blue))
+                    
+                    
+                    
+                    Toggle(isOn: $darkMode) {
+                        Label("Dark Mode", systemImage: "moon")
+                    }
+                    .toggleStyle(SwitchToggleStyle(tint: .blue))
+                }
+                
+                
+                // About Section
+                Section(header: Text("About")) {
+                    HStack {
+                        Text("Version")
+                        Spacer()
+                        Text("1.0.0")
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                
+                //MARK: Logout Section
+                Section {
+                    Button("Log Out", role: .destructive) {
+                        Task {
+                            await authViewModel.logOut()
+                        }
+                    }
+                    .disabled(authViewModel.isLoading)
+                }
+            }
+            .navigationTitle("Settings")
+            
+            NavigationLink {
+                HomePage(authViewModel: authViewModel)
+            } label: {
+                Image(systemName: "house")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 40, height: 40)
+                    .padding()
+                    .foregroundStyle(.blue)
+                    .padding()
+            }
+            .offset(x: -150, y: 20)
+            Spacer()
+                .preferredColorScheme(darkMode ? .dark : .light)
+        }
+        
+    }
 }
 
 #Preview {
-    Settings()
+    Settings(authViewModel: AuthViewModel())
 }

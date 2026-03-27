@@ -8,14 +8,23 @@
 import SwiftUI
 
 struct ContentView: View {
+    // Stores the app's auth state.
+    @StateObject private var authViewModel = AuthViewModel()
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, worldr!")
+        Group {
+            // Show the home page when the user is signed in.
+            if authViewModel.isAuthenticated {
+                HomePage(authViewModel: authViewModel)
+            } else {
+                // Show the welcome page when the user is signed out.
+                WelcomePage(authViewModel: authViewModel)
+            }
         }
-        .padding()
+        .task {
+            // Restore any existing user session on launch.
+            await authViewModel.getInitialSession()
+        }
     }
 }
 

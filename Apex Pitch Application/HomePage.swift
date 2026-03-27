@@ -6,8 +6,10 @@
 //
 
 import SwiftUI
+internal import Combine
 
 struct HomePage: View {
+    @ObservedObject var authViewModel: AuthViewModel
     @AppStorage("darkMode") var darkMode: Bool = false
     var body: some View {
         NavigationStack {
@@ -16,7 +18,8 @@ struct HomePage: View {
                     .resizable()
                     .frame(width: 300,height: 300)
                 Spacer()
-      
+                
+                //MARK: Link to tabs page
                 NavigationLink {
                     TabPage()
                 } label: {
@@ -31,8 +34,9 @@ struct HomePage: View {
                 }
                 Spacer()
                 
+                //MARK: link to the notes page
                 NavigationLink {
-//                    Notes_Page()
+                    //                    Notes_Page()
                 } label: {
                     Text("Add notes")
                         .font(.title2)
@@ -45,6 +49,7 @@ struct HomePage: View {
                 }
                 Spacer()
                 
+                //MARK: Link to the meetings page
                 NavigationLink {
                     meetingsPage(showWebView: "https://zoom.us/signin")
                 } label: {
@@ -56,25 +61,23 @@ struct HomePage: View {
                         .background(Color.blue)
                         .cornerRadius(10)
                         .padding()
-                                    }
+                }
                 Spacer()
                 
-
-                        NavigationLink {
-                            Settings()
-                        } label: {
-                            Image(systemName: "gearshape.2")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 40, height: 40)
-                                .padding()
-                                .foregroundStyle(.blue)
-                                .padding()
-                        }
-                        .offset(x: 150)
-                        Spacer()
-                    
-
+                //MARK: Link to the Settings page
+                NavigationLink {
+                    Settings(authViewModel: authViewModel)
+                } label: {
+                    Image(systemName: "gearshape.2")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 40, height: 40)
+                        .padding()
+                        .foregroundStyle(.blue)
+                        .padding()
+                }
+                .offset(x: 150)
+                Spacer()
                 
             }
             .navigationTitle("Apex Pitch")
@@ -85,5 +88,5 @@ struct HomePage: View {
 }
 
 #Preview {
-    HomePage()
+    HomePage(authViewModel: AuthViewModel())
 }
