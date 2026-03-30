@@ -89,6 +89,11 @@ struct SignUp: View {
                 
                 //            MARK: Button to signUp
                 Button("Sign up"){
+                    if password != confirmPassword {
+                        authViewModel.errorMessage = "Passwords do not match."
+                        authViewModel.statusMessage = nil
+                        return
+                    }
                     Task {
                         await authViewModel.signUp(email: email, password: password)
                     }
