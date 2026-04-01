@@ -8,6 +8,7 @@
 import SwiftUI
 import Supabase // 1. Added Import
 
+<<<<<<< HEAD:Apex Pitch Application/TabPage.swift
 // Added Codable so Supabase can read/write these types
 enum Types: String, CaseIterable, Codable {
     case concepts = "Concept"
@@ -23,6 +24,8 @@ struct Idea: Identifiable, Equatable {
     let fundingRaised: String
     let type: Types
 }
+=======
+>>>>>>> 711bedbe754d870cd644184a55f4c67d7a274faf:Apex Pitch Application/In-App Navigation/TabPage.swift
 
 struct SupabaseIdeaRecord: Codable, Identifiable {
     var id: Int?

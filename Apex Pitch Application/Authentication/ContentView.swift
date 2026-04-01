@@ -22,7 +22,7 @@ struct ContentView: View {
             }
         }
         .task {
-            // Restore any existing user session on launch.
+             // Restore any existing user session on launch.
             await authViewModel.getInitialSession()
         }
     }

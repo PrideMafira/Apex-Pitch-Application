@@ -36,7 +36,7 @@ struct HomePage: View {
                 
                 //MARK: link to the notes page
                 NavigationLink {
-                    //                    Notes_Page()
+                       FeedbackNotesView()
                 } label: {
                     Text("Add notes")
                         .font(.title2)
