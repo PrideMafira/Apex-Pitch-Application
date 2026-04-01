@@ -1,11 +1,12 @@
-//
-//  addIdeaPage.swift
-//  Apex Pitch Application
-//
-//  Created by Pride Mafira  on 13/2/2026.
-//
+////
+////  addIdeaPage.swift
+////  Apex Pitch Application
+////
+////  Created by Pride Mafira  on 13/2/2026.
+////
 
 import SwiftUI
+import Supabase
 
 struct addIdeaPage: View {
     @State private var startupName: String = ""
@@ -13,6 +14,10 @@ struct addIdeaPage: View {
     @State private var selectedStage: Types = .concepts
     @State private var fundingGoal: String = ""
     @State private var fundingRaised: String = ""
+    
+    // Track loading state for the UI
+    @State private var isSaving = false
+    @State private var saveErrorMessage: String?
     
     @Environment(\.dismiss) var dismiss
     @Binding var ideas: [Idea]
@@ -24,7 +29,6 @@ struct addIdeaPage: View {
                     Section(header: Text("Startup Details")) {
                         TextField("Enter startup name", text: $startupName)
                         
-                        // TextEditor
                         ZStack(alignment: .topLeading) {
                             if description.isEmpty {
                                 Text("Enter idea description...")
@@ -55,7 +59,6 @@ struct addIdeaPage: View {
                     }
                 }
                 
-                // Action buttons
                 HStack {
                     Button("Cancel") {
                         dismiss()
@@ -65,43 +68,105 @@ struct addIdeaPage: View {
                     .background(Color.gray.opacity(0.2))
                     .cornerRadius(10)
                     
-                    // Enable button only when required fields are filled
-                    Button("Add Idea") {
-                        let newIdea = Idea(
-                            startupName: startupName,
-                            ideaDescription: description,
-                            fundingGoal: fundingGoal,
-                            fundingRaised: fundingRaised,
-                            type: selectedStage
-                        )
-                        ideas.append(newIdea)
-                        dismiss()
+                    Button {
+                        //Wrap the call in a Task for async work
+                        Task {
+                            await saveIdeaToSupabase()
+                        }
+                    } label: {
+                        if isSaving {
+                            //Show spinner while saving
+                            ProgressView()
+                        } else {
+                            Text("Add Idea")
+                        }
                     }
                     .frame(maxWidth: .infinity)
                     .padding()
                     .background(isFormValid ? Color.blue : Color.gray)
                     .foregroundColor(.white)
                     .cornerRadius(10)
-                    .disabled(!isFormValid)
+                    .disabled(!isFormValid || isSaving)
                 }
                 .padding()
             }
             .navigationTitle("Add New Idea")
             .navigationBarTitleDisplayMode(.inline)
+            .alert("Unable to Save Idea", isPresented: saveErrorMessageBinding) {
+                Button("OK", role: .cancel) {
+                    saveErrorMessage = nil
+                }
+            } message: {
+                Text(saveErrorMessage ?? "Please try again.")
+            }
         }
     }
     
-    //MARK: Computed property to validate form
+    //MARK: Function to handle Supabase logic for saving ideas
+    func saveIdeaToSupabase() async {
+        isSaving = true
+        
+        let newIdea = Idea(
+            startupName: startupName,
+            ideaDescription: description,
+            fundingGoal: fundingGoal,
+            fundingRaised: fundingRaised,
+            type: selectedStage
+        )
+        let record = newIdea.asSupabaseRecord()
+        
+        do {
+            _ = try await supabase.auth.session
+
+            guard record.fundingGoal != nil, record.fundingRaised != nil else {
+                saveErrorMessage = "Funding goal and amount raised must be valid numbers."
+                isSaving = false
+                return
+            }
+
+            try await supabase
+                .from("Ideas Table")
+                .insert(record)
+                .execute()
+            
+            // If successful, update local UI and dismiss
+            ideas.append(newIdea)
+            dismiss()
+        } catch {
+            let message = error.localizedDescription
+
+            if message == "Auth session missing." {
+                saveErrorMessage = "You need to sign in before saving an idea."
+            } else if message.contains("row-level security policy") {
+                saveErrorMessage = "Supabase rejected the insert because your table policy does not allow this user to add ideas."
+            } else {
+                saveErrorMessage = message
+            }
+        }
+        
+        isSaving = false
+    }
+    
     private var isFormValid: Bool {
         !startupName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
         !description.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
         !fundingGoal.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
         !fundingRaised.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
+
+    private var saveErrorMessageBinding: Binding<Bool> {
+        Binding(
+            get: { saveErrorMessage != nil },
+            set: { isPresented in
+                if !isPresented {
+                    saveErrorMessage = nil
+                }
+            }
+        )
+    }
 }
+
 
 #Preview {
     addIdeaPage(ideas: .constant([]))
 }
-
-
