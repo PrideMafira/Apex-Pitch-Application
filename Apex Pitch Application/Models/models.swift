@@ -12,13 +12,16 @@ import WebKit
 
 
 //MARK: TAB PAGE FOR IDEAS
-enum Types: String, CaseIterable {
+
+// Added Codable so Supabase can read/write these types
+enum Types: String, CaseIterable, Codable {
     case concepts = "Concept"
     case prototype = "Prototype"
     case funded = "Funded"
 }
 
-struct Idea {
+struct Idea: Identifiable, Equatable {
+    var id: Int? // Supabase auto-generates this
     let startupName: String
     let ideaDescription: String
     let fundingGoal: String
