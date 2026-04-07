@@ -7,9 +7,7 @@
 import SwiftUI
 internal import Combine
 
-// Main page for viewing feedback notes and opening the add-note form.
 struct FeedbackNotesView: View {
-    // Owns the in-memory note store for this page.
     @StateObject private var store = FeedbackStore()
     // Controls whether the add-note sheet is visible.
     @State private var showingAddNote = false
@@ -17,7 +15,7 @@ struct FeedbackNotesView: View {
     var body: some View {
         NavigationStack {
             List {
-                // Empty state shown before the user has saved any notes.
+                //MARK: Empty state shown before the user has saved any notes.
                 if store.notes.isEmpty {
                     ContentUnavailableView(
                         "No Feedback Notes Yet",
@@ -25,7 +23,7 @@ struct FeedbackNotesView: View {
                         description: Text("Tap the + button to save idea or meeting feedback.")
                     )
                 } else {
-                    // Builds one row for every saved feedback note.
+                    //MARK: Builds one row for every saved feedback note.
                     ForEach(store.notes) { note in
                         VStack(alignment: .leading, spacing: 8) {
                             Text(note.title)
@@ -48,7 +46,7 @@ struct FeedbackNotesView: View {
                                 .font(.body)
                                 .lineLimit(3)
                             
-                            // Follow-up actions are shown only when they exist.
+                            //MARK: Follow-up actions are shown only when they exist.
                             if !note.actionItems.isEmpty {
                                 VStack(alignment: .leading, spacing: 4) {
                                     Text("Action Items")
@@ -61,7 +59,7 @@ struct FeedbackNotesView: View {
                                 }
                             }
                             
-                            // Timestamp showing when the note was recorded.
+                            //MARK: Timestamp showing when the note was recorded.
                             Text(note.date.formatted(date: .abbreviated, time: .shortened))
                                 .font(.caption2)
                                 .foregroundColor(.gray)
@@ -74,7 +72,7 @@ struct FeedbackNotesView: View {
             }
             .navigationTitle("Feedback Notes")
             .toolbar {
-                // Button that opens the sheet for creating a new note.
+                //MARK: Presents the sheet where the user can draft and save a new note.
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
                         showingAddNote = true
@@ -83,7 +81,7 @@ struct FeedbackNotesView: View {
                     }
                 }
             }
-            // Presents the add-note screen and saves the result into the store.
+            // Captures the created note and inserts it into the local store.
             .sheet(isPresented: $showingAddNote) {
                 AddFeedbackNoteView { newNote in
                     store.addNote(newNote)

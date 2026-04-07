@@ -11,6 +11,7 @@ internal import Combine
 struct HomePage: View {
     @ObservedObject var authViewModel: AuthViewModel
     @AppStorage("darkMode") var darkMode: Bool = false
+    
     var body: some View {
         NavigationStack {
             VStack {
@@ -19,7 +20,7 @@ struct HomePage: View {
                     .frame(width: 300,height: 300)
                 Spacer()
                 
-                //MARK: Link to tabs page
+                //MARK: Opens the idea management area where users can browse and create startup ideas.
                 NavigationLink {
                     TabPage()
                 } label: {
@@ -27,29 +28,29 @@ struct HomePage: View {
                         .font(.title2)
                         .foregroundColor(.white)
                         .padding()
-                        .frame(maxWidth: .infinity) // This makes the label expand horizontally
+                        .frame(maxWidth: .infinity)
                         .background(Color.blue)
                         .cornerRadius(10)
                         .padding()
                 }
                 Spacer()
                 
-                //MARK: link to the notes page
+                //MARK: Opens the feedback note workflow for capturing investor or meeting takeaways.
                 NavigationLink {
-                       FeedbackNotesView()
+                    FeedbackNotesView()
                 } label: {
                     Text("Add notes")
                         .font(.title2)
                         .foregroundColor(.white)
                         .padding()
-                        .frame(maxWidth: .infinity) // This makes the label expand horizontally
+                        .frame(maxWidth: .infinity)
                         .background(Color.blue)
                         .cornerRadius(10)
                         .padding()
                 }
                 Spacer()
                 
-                //MARK: Link to the meetings page
+                //MARK: Opens the embedded meetings screen for quick access to Zoom.
                 NavigationLink {
                     meetingsPage(showWebView: "https://zoom.us/signin")
                 } label: {
@@ -57,14 +58,14 @@ struct HomePage: View {
                         .font(.title2)
                         .foregroundColor(.white)
                         .padding()
-                        .frame(maxWidth: .infinity) // This makes the label expand horizontally
+                        .frame(maxWidth: .infinity)
                         .background(Color.blue)
                         .cornerRadius(10)
                         .padding()
                 }
                 Spacer()
                 
-                //MARK: Link to the Settings page
+                //MARK: Keeps account and preference controls available without crowding the main actions.
                 NavigationLink {
                     Settings(authViewModel: authViewModel)
                 } label: {

@@ -60,6 +60,7 @@ struct addIdeaPage: View {
                 }
                 
                 HStack {
+                    // Closes the form without mutating local state or sending anything to Supabase.
                     Button("Cancel") {
                         dismiss()
                     }
@@ -69,13 +70,13 @@ struct addIdeaPage: View {
                     .cornerRadius(10)
                     
                     Button {
-                        //Wrap the call in a Task for async work
+                        // Runs the network write on a task so the button can trigger async work.
                         Task {
                             await saveIdeaToSupabase()
                         }
                     } label: {
                         if isSaving {
-                            //Show spinner while saving
+                            // Replaces the button title while the request is still in flight.
                             ProgressView()
                         } else {
                             Text("Add Idea")
@@ -102,7 +103,7 @@ struct addIdeaPage: View {
         }
     }
     
-    //MARK: Function to handle Supabase logic for saving ideas
+    // Validates the form, writes the idea to Supabase, then updates the local list on success.
     func saveIdeaToSupabase() async {
         isSaving = true
         
@@ -117,24 +118,24 @@ struct addIdeaPage: View {
         
         do {
             _ = try await supabase.auth.session
-
+            
             guard record.fundingGoal != nil, record.fundingRaised != nil else {
                 saveErrorMessage = "Funding goal and amount raised must be valid numbers."
                 isSaving = false
                 return
             }
-
+            
             try await supabase
                 .from("Ideas Table")
                 .insert(record)
                 .execute()
             
-            // If successful, update local UI and dismiss
+            // Mirror the remote insert locally so the user sees the new card immediately.
             ideas.append(newIdea)
             dismiss()
         } catch {
             let message = error.localizedDescription
-
+            
             if message == "Auth session missing." {
                 saveErrorMessage = "You need to sign in before saving an idea."
             } else if message.contains("row-level security policy") {
@@ -148,13 +149,15 @@ struct addIdeaPage: View {
     }
     
     private var isFormValid: Bool {
+        // Keeps the save button disabled until the required fields contain non-empty values.
         !startupName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
         !description.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
         !fundingGoal.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
         !fundingRaised.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
-
+    
     private var saveErrorMessageBinding: Binding<Bool> {
+        // Bridges the optional error message into the Boolean binding expected by .alert.
         Binding(
             get: { saveErrorMessage != nil },
             set: { isPresented in
