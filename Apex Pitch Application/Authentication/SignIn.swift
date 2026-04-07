@@ -7,8 +7,11 @@
 
 import SwiftUI
 
+/// Authentication screen for existing users.
 struct SignIn: View {
+    // Shared auth object so the view can trigger sign-in and react to loading or error changes.
     @ObservedObject var authViewModel: AuthViewModel
+    // Local form state for the sign-in request.
     @State private var email = ""
     @State private var password = ""
     @State private var rememberMe = false
@@ -64,7 +67,7 @@ struct SignIn: View {
                     .padding(.top, 8)
                 }
                 
-                //MARK: Login
+                // Starts the async sign-in request with the values currently entered in the form.
                 Button("Log in") {
                     Task {
                         await authViewModel.signIn(email: email, password: password)
@@ -79,11 +82,13 @@ struct SignIn: View {
                 .contentShape(Rectangle())
                 .buttonStyle(.plain)
                 
+                // Keeps the user informed while Supabase is processing the sign-in request.
                 if authViewModel.isLoading {
                     ProgressView()
                         .tint(.white)
                 }
                 
+                // Surfaces any authentication failure from the view model directly under the button.
                 if let errorMessage = authViewModel.errorMessage {
                     Text(errorMessage)
                         .font(.footnote)
@@ -95,13 +100,12 @@ struct SignIn: View {
                 
                 Spacer()
                 
-                //MARK: Link to the sign up page if not a user
+                // Provides a direct path to account creation when the user is new to the app.
                 HStack {
                     Text("Don't have an account?")
                         .font(.system(size: 14))
                         .foregroundColor(.secondary)
                     
-                    //MARK: link to the sign up page
                     NavigationLink {
                         SignUp(authViewModel: authViewModel)
                     }label: {
@@ -121,7 +125,6 @@ struct SignIn: View {
 #Preview {
     SignIn(authViewModel: AuthViewModel())
 }
-
 
 
 

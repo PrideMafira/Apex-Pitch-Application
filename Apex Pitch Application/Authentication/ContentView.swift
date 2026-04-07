@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// Root container that switches between the signed-out and signed-in flows.
 struct ContentView: View {
     // Stores the app's auth state.
     @StateObject private var authViewModel = AuthViewModel()
@@ -22,7 +23,7 @@ struct ContentView: View {
             }
         }
         .task {
-             // Restore any existing user session on launch.
+            // Restore any existing user session on launch so the user does not have to sign in every time.
             await authViewModel.getInitialSession()
         }
     }

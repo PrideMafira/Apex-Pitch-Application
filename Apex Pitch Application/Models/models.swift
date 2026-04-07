@@ -10,10 +10,9 @@ import SwiftUI
 internal import Combine
 import WebKit
 
+// MARK: Shared App Models
 
-//MARK: TAB PAGE FOR IDEAS
-
-// Added Codable so Supabase can read/write these types
+//MARK: Startup stages used by the ideas dashboard and the add-idea form.
 enum Types: String, CaseIterable, Codable {
     case concepts = "Concept"
     case prototype = "Prototype"
@@ -29,7 +28,51 @@ struct Idea: Identifiable, Equatable {
     let type: Types
 }
 
-//MARK: FOR NOTES PAGE
+// MARK: Mirrors the Supabase row shape used when reading and writing ideas. (TabPage)
+struct SupabaseIdeaRecord: Codable, Identifiable {
+    var id: Int?
+    let name: String
+    let description: String?
+    let fundingGoal: Double?
+    let fundingRaised: Double?
+    let stage: String?
+}
+
+extension Idea {
+    // Converts a Supabase response into the local model used by the SwiftUI list.
+    init(record: SupabaseIdeaRecord) {
+        self.id = record.id
+        self.startupName = record.name
+        self.ideaDescription = record.description ?? ""
+        self.fundingGoal = record.fundingGoal.flatMap { Self.numberFormatter.string(for: $0) } ?? ""
+        self.fundingRaised = record.fundingRaised.flatMap { Self.numberFormatter.string(for: $0) } ?? ""
+        self.type = Types(rawValue: record.stage ?? "") ?? .concepts
+    }
+    
+    // Converts the local idea model back into the payload expected by Supabase.
+    func asSupabaseRecord() -> SupabaseIdeaRecord {
+        SupabaseIdeaRecord(
+            id: id,
+            name: startupName,
+            description: ideaDescription,
+            fundingGoal: Double(fundingGoal),
+            fundingRaised: Double(fundingRaised),
+            stage: type.rawValue
+        )
+    }
+    
+    private static let numberFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.maximumFractionDigits = 2
+        return formatter
+    }()
+}
+
+
+
+
+//MARK: Feedback entry captured from meetings, reviews, or general discussions.
 struct FeedbackNote: Identifiable, Codable {
     var id = UUID()
     var title: String
@@ -49,8 +92,7 @@ struct FeedbackNote: Identifiable, Codable {
 }
 
 
-// MARK: VIEWING THE NOTES ADDED FROM NOTES PAGE
-// Holds the notes shown on this screen and provides simple list actions.
+//MARK: Holds the notes shown on the feedback screen and provides simple list actions.
 class FeedbackStore: ObservableObject {
     // Published so the UI refreshes automatically when notes are added or removed.
     @Published var notes: [FeedbackNote] = []
@@ -66,7 +108,7 @@ class FeedbackStore: ObservableObject {
     }
 }
 
-//MARK: ZOOM MEETINGS PAGE TO TAKE THE USER TO THE WEBPAGE FOR ZOOM
+//MARK: Reusable UIKit bridge for showing web content inside SwiftUI screens.
 struct WebView: UIViewRepresentable {
     var url: URL
     

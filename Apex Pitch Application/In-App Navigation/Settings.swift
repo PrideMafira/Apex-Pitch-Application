@@ -30,7 +30,7 @@ struct Settings: View {
                     }
                 }
                 
-                // Preferences Section
+                //MARK: Preferences that are stored locally on the device.
                 Section(header: Text("Preferences")) {
                     Toggle(isOn: $notificationsEnabled) {
                         Label("Notifications", systemImage: "bell")
@@ -46,7 +46,7 @@ struct Settings: View {
                 }
                 
                 
-                // About Section
+                //MARK: About Section
                 Section(header: Text("About")) {
                     HStack {
                         Text("Version")
@@ -56,7 +56,7 @@ struct Settings: View {
                     }
                 }
                 
-                //MARK: Logout Section
+                //MARK: Logs the user out through the shared auth view model.
                 Section {
                     Button("Log Out", role: .destructive) {
                         Task {
@@ -68,6 +68,7 @@ struct Settings: View {
             }
             .navigationTitle("Settings")
             
+            //MARK: Quick return path back to the signed-in dashboard.
             NavigationLink {
                 HomePage(authViewModel: authViewModel)
             } label: {

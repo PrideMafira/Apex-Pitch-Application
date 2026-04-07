@@ -6,50 +6,12 @@
 ////
 
 import SwiftUI
-import Supabase // 1. Added Import
-
-struct SupabaseIdeaRecord: Codable, Identifiable {
-    var id: Int?
-    let name: String
-    let description: String?
-    let fundingGoal: Double?
-    let fundingRaised: Double?
-    let stage: String?
-}
-
-extension Idea {
-    init(record: SupabaseIdeaRecord) {
-        self.id = record.id
-        self.startupName = record.name
-        self.ideaDescription = record.description ?? ""
-        self.fundingGoal = record.fundingGoal.flatMap { Self.numberFormatter.string(for: $0) } ?? ""
-        self.fundingRaised = record.fundingRaised.flatMap { Self.numberFormatter.string(for: $0) } ?? ""
-        self.type = Types(rawValue: record.stage ?? "") ?? .concepts
-    }
-
-    func asSupabaseRecord() -> SupabaseIdeaRecord {
-        SupabaseIdeaRecord(
-            id: id,
-            name: startupName,
-            description: ideaDescription,
-            fundingGoal: Double(fundingGoal),
-            fundingRaised: Double(fundingRaised),
-            stage: type.rawValue
-        )
-    }
-
-    private static let numberFormatter: NumberFormatter = {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        formatter.maximumFractionDigits = 2
-        return formatter
-    }()
-}
+import Supabase
 
 struct TabPage: View {
     @State private var selectedTab: Types = .concepts
     @State private var ideas: [Idea] = []
-    @State private var isLoading = false // Track loading state
+    @State private var isLoading = false
     
     let tabs: [Types] = [.concepts, .prototype, .funded]
     
@@ -80,7 +42,7 @@ struct TabPage: View {
                 .background(Color(.systemGray6))
                 .shadow(radius: 1)
                 
-                // MARK: Display Content
+                //MARK: Shows a loading state, an empty state, or the current filtered ideas.
                 if isLoading {
                     ProgressView("Fetching your ideas...")
                         .frame(maxHeight: .infinity)
@@ -100,7 +62,8 @@ struct TabPage: View {
                     ScrollView {
                         LazyVStack(spacing: 16) {
                             ForEach(filteredIdeas) { idea in
-                                IdeaRow(idea: idea) // Moved row UI to a helper view below
+                                //MARK: Each card is rendered by a helper view to keep this screen readable.
+                                IdeaRow(idea: idea)
                             }
                             .padding(.horizontal)
                         }
@@ -108,7 +71,7 @@ struct TabPage: View {
                     }
                 }
                 
-                // MARK: Add Idea Button
+                //MARK: Opens the form used to create a new idea record.
                 NavigationLink {
                     addIdeaPage(ideas: $ideas)
                 } label: {
@@ -129,7 +92,7 @@ struct TabPage: View {
             }
             .navigationTitle("My Ideas")
             .navigationBarTitleDisplayMode(.inline)
-            // 2. Fetch data when the page appears
+            //MARK: Fetch data when the page appears
             .task {
                 await fetchIdeas()
             }
@@ -140,7 +103,7 @@ struct TabPage: View {
         }
     }
     
-    // MARK: Supabase Fetch Function
+    //MARK: Fetches the latest ideas from Supabase every time the screen appears or refreshes.
     func fetchIdeas() async {
         isLoading = true
         do {
@@ -156,13 +119,14 @@ struct TabPage: View {
         }
         isLoading = false
     }
-
+    
     private var filteredIdeas: [Idea] {
+        // Keeps the tab bar logic simple by deriving the visible list from the full dataset.
         ideas.filter { $0.type == selectedTab }
     }
 }
 
-// Helper View for the Idea Card
+//MARK: Visual representation of a single idea in the list.
 struct IdeaRow: View {
     let idea: Idea
     

@@ -7,8 +7,11 @@
 
 import SwiftUI
 
+/// Registration screen for creating a new Apex Pitch account.
 struct SignUp: View {
+    // Shared auth state so the screen can call sign-up and display auth feedback.
     @ObservedObject var authViewModel: AuthViewModel
+    // Local form fields collected before creating an account.
     @State private var fullName = ""
     @State private var email = ""
     @State private var password = ""
@@ -31,7 +34,7 @@ struct SignUp: View {
             }
             .padding(.top, 25)
             
-            //Textfields
+            // Collects the user details required for the sign-up request.
             VStack(spacing: 20) {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Full Name")
@@ -87,7 +90,7 @@ struct SignUp: View {
                                 .stroke(Color.gray.opacity(0.3), lineWidth: 1))
                 }
                 
-                //            MARK: Button to signUp
+                // Prevents the request from being sent unless both password fields agree.
                 Button("Sign up"){
                     if password != confirmPassword {
                         authViewModel.errorMessage = "Passwords do not match."
@@ -131,7 +134,7 @@ struct SignUp: View {
                         .padding(.horizontal)
                 }
                 
-                //MARK: Navigation to SignIn page
+                // Gives existing users a way back to the sign-in screen.
                 HStack {
                     Text("Already have an account?")
                     

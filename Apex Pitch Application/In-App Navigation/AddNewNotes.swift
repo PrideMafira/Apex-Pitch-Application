@@ -6,18 +6,17 @@
 //
 import SwiftUI
 
+
 struct AddFeedbackNoteView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var title = ""
-    // Currently selected feedback category.
     @State private var category: FeedbackNote.Category = .idea
-    // Source of the feedback, such as a person or meeting.
     @State private var source = ""
     @State private var date = Date()
     @State private var feedback = ""
     @State private var actionItems = ""
     
-    // Called when the user saves a completed note.
+    //MARK: Called when the user saves a completed note.
     var onSave: (FeedbackNote) -> Void
     
     var body: some View {
@@ -26,7 +25,7 @@ struct AddFeedbackNoteView: View {
                 Section("Basic Info") {
                     TextField("Title", text: $title)
                     
-                    // Lets the user classify the note using the available categories.
+                    //MARK: Lets the user classify the note using the available categories.
                     Picker("Category", selection: $category) {
                         ForEach(FeedbackNote.Category.allCases, id: \.self) { item in
                             Text(item.rawValue).tag(item)
@@ -37,13 +36,13 @@ struct AddFeedbackNoteView: View {
                     DatePicker("Date", selection: $date, displayedComponents: [.date, .hourAndMinute])
                 }
                 
-                // Main text area for the feedback the user received.
+                //MARK: Main text area for the feedback the user received.
                 Section("Feedback") {
                     TextField("What feedback did you receive?", text: $feedback, axis: .vertical)
                         .lineLimit(4...8)
                 }
                 
-                //                MARK: next actions after feedback
+                // MARK: next actions after feedback
                 Section("Action Items") {
                     TextField("What should be improved or done next?", text: $actionItems, axis: .vertical)
                         .lineLimit(3...6)
@@ -51,7 +50,6 @@ struct AddFeedbackNoteView: View {
             }
             .navigationTitle("New Feedback Note")
             .toolbar {
-                
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Cancel") {
                         dismiss()
