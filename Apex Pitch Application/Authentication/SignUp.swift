@@ -7,11 +7,9 @@
 
 import SwiftUI
 
-/// Registration screen for creating a new Apex Pitch account.
 struct SignUp: View {
     // Shared auth state so the screen can call sign-up and display auth feedback.
     @ObservedObject var authViewModel: AuthViewModel
-    // Local form fields collected before creating an account.
     @State private var fullName = ""
     @State private var email = ""
     @State private var password = ""
@@ -34,7 +32,6 @@ struct SignUp: View {
             }
             .padding(.top, 25)
             
-            // Collects the user details required for the sign-up request.
             VStack(spacing: 20) {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Full Name")
@@ -109,12 +106,6 @@ struct SignUp: View {
                 .cornerRadius(10)
                 .contentShape(Rectangle())
                 .buttonStyle(.plain)
-                
-                //                 Show a loading indicator while the sign-up request is in progress.
-                //                if authViewModel.isLoading {
-                //                    ProgressView()
-                //                        .tint(.blue)
-                //                }
                 
                 // Show the status text only when a message is available.
                 if let statusMessage = authViewModel.statusMessage {
