@@ -29,9 +29,9 @@ struct Settings: View {
                 
                 // Preferences Section
                 Section(header: Text("Preferences")) {
-                    Toggle(isOn: $notificationsEnabled) {
-                        Label("Notifications", systemImage: "bell")
-                    }
+                    //                    Toggle(isOn: $notificationsEnabled) {
+                    //                        Label("Notifications", systemImage: "bell")
+                    //                    }
                     
                     Toggle(isOn: $darkMode) {
                         Label("Dark Mode", systemImage: "moon")
@@ -75,10 +75,7 @@ struct Settings: View {
             .offset(x: -150, y: 20)
             
             Spacer()
-            
-            
                 .preferredColorScheme(darkMode ? .dark : .light)
-            
         }
     }
 }
