@@ -67,7 +67,8 @@ struct HomePage: View {
                 
                 //MARK: Keeps account and preference controls available without crowding the main actions.
                 NavigationLink {
-                    Settings()
+                    Settings(authViewModel: authViewModel)
+
                 } label: {
                     Image(systemName: "gearshape.2")
                         .resizable()
