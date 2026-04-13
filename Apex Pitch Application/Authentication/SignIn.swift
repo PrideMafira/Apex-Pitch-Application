@@ -7,7 +7,11 @@
 
 import SwiftUI
 
+/// Authentication screen for existing users.
 struct SignIn: View {
+    // Shared auth object so the view can trigger sign-in and react to loading or error changes.
+    @ObservedObject var authViewModel: AuthViewModel
+    // Local form state for the sign-in request.
     @State private var email = ""
     @State private var password = ""
     @State private var rememberMe = false
@@ -15,7 +19,7 @@ struct SignIn: View {
     var body: some View {
         NavigationStack{
             VStack(alignment: .leading, spacing: 50) {
-                // Header
+                // MARK: Header
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Sign In")
                         .font(.system(size: 34, weight: .bold))
@@ -26,7 +30,7 @@ struct SignIn: View {
                 }
                 .padding(.top, 50)
                 
-                // Form Fields
+                // MARK: Form Fields
                 VStack(spacing: 20) {
                     // Email Field
                     VStack(alignment: .leading, spacing: 8) {
@@ -60,48 +64,53 @@ struct SignIn: View {
                             )
                     }
                     
-                    // Remember Me & Forgot Password
-                    HStack {
-                        Toggle(isOn: $rememberMe) {
-                            Text("Remember me")
-                                .font(.system(size: 16))
-                                .foregroundColor(.secondary)
-                        }
-                        Spacer()
-                        
-                    }
                     .padding(.top, 8)
                 }
-                NavigationLink {
-                    HomePage()
-                } label: {
-                    Text("Log In")
-                        .frame(width: 340)
-                        .padding()
-                        .font(.caption)
-                        .background(Color.blue)
-                        .foregroundStyle(.white)
-                        .cornerRadius(10)
-                        .buttonStyle(.bordered)
+                
+                // Starts the async sign-in request with the values currently entered in the form.
+                Button("Log in") {
+                    Task {
+                        await authViewModel.signIn(email: email, password: password)
+                    }
                 }
-                .padding(.top, 16)
+                .frame(maxWidth: .infinity)
+                .padding()
+                .font(.callout)
+                .foregroundStyle(.white)
+                .background(Color.blue)
+                .cornerRadius(10)
+                .contentShape(Rectangle())
+                .buttonStyle(.plain)
+                
+                // Keeps the user informed while Supabase is processing the sign-in request.
+                if authViewModel.isLoading {
+                    ProgressView()
+                        .tint(.white)
+                }
+                
+                // Surfaces any authentication failure from the view model directly under the button.
+                if let errorMessage = authViewModel.errorMessage {
+                    Text(errorMessage)
+                        .font(.footnote)
+                        .multilineTextAlignment(.center)
+                        .foregroundColor(.red)
+                        .padding(.horizontal)
+                    
+                }
                 
                 Spacer()
                 
-                // Sign Up Link
+                // Provides a direct path to account creation when the user is new to the app.
                 HStack {
                     Text("Don't have an account?")
                         .font(.system(size: 14))
                         .foregroundColor(.secondary)
                     
-                    
-                    // Sign up action
                     NavigationLink {
-                        SignUp()
+                        SignUp(authViewModel: authViewModel)
                     }label: {
                         Text("Create an account")
                     }
-                    
                     .font(.system(size: 14, weight: .medium))
                     .foregroundColor(.blue)
                 }
@@ -109,16 +118,13 @@ struct SignIn: View {
             }
             .padding(.horizontal, 24)
             .padding(.bottom, 20)
-            
         }
+        
     }
-    
 }
 #Preview {
-    SignIn()
+    SignIn(authViewModel: AuthViewModel())
 }
-
-
 
 
 

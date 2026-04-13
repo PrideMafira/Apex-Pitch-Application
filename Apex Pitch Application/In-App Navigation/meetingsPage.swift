@@ -15,6 +15,7 @@ struct meetingsPage: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 40) {
+                // Embeds the remote page directly so users do not need to leave the app.
                 WebView(url: URL(string: urlString)!).frame(height: .infinity)
                 
                     .ignoresSafeArea()
@@ -23,21 +24,6 @@ struct meetingsPage: View {
         }
     }
 }
-
-struct WebView: UIViewRepresentable {
-    var url: URL
-    
-    func makeUIView(context: Context) -> some WKWebView {
-        return WKWebView()
-    }
-    
-    func updateUIView(_ uiView: UIViewType, context: Context) {
-        let request = URLRequest(url: url)
-        uiView.load(request)
-    }
-}
-
-
 
 #Preview {
     meetingsPage(showWebView: "https://zoom.us/signin")

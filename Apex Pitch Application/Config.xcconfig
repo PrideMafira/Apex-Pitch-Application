@@ -1,0 +1,11 @@
+//
+//  Config.xcconfig
+//  Apex Pitch Application
+//
+//  Created by admin on 31/3/2026.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://developer.apple.com/documentation/xcode/adding-a-build-configuration-file-to-your-project
+
+API_KEY = https:tkdvjvwisqxnkrruvfne.supabase.co

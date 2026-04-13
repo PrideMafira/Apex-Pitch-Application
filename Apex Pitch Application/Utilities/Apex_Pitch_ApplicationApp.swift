@@ -8,10 +8,12 @@
 import SwiftUI
 
 @main
+/// App entry point that loads the SwiftUI root view.
 struct Apex_Pitch_ApplicationApp: App {
     var body: some Scene {
         WindowGroup {
-            WelcomePage()
+            // ContentView owns the high-level auth routing for the app.
+            ContentView()
         }
     }
 }
