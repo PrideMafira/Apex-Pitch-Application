@@ -10,48 +10,43 @@ import SwiftUI
 struct Settings: View {
     @ObservedObject var authViewModel: AuthViewModel
     @State private var notificationsEnabled = true
-    @AppStorage("darkMode") private var darkMode = false
-
+    @AppStorage("darkMode") var darkMode: Bool = false
+    @Environment(\.dismiss) var dismiss // Used to go back home
+    
     var body: some View {
         NavigationStack {
             Form {
+                // Account Section - Now Clickable!
                 Section(header: Text("Account")) {
-                    HStack {
-                        Image(systemName: "person.circle")
-                            .foregroundStyle(.primary)
-                        Text("Profile")
+                    NavigationLink(destination: ProfileView()) {
+                        Label("Profile", systemImage: "person.circle")
                     }
-
-                    HStack {
-                        Image(systemName: "lock")
-                            .foregroundStyle(.primary)
-                        Text("Change Password")
+                    
+                    NavigationLink(destination: Text("Change Password View")) {
+                        Label("Change Password", systemImage: "lock")
                     }
                 }
-
-                // MARK: Preferences that are stored locally on the device.
+                
+                // Preferences Section
                 Section(header: Text("Preferences")) {
                     Toggle(isOn: $notificationsEnabled) {
                         Label("Notifications", systemImage: "bell")
                     }
-                    .toggleStyle(SwitchToggleStyle(tint: .blue))
-
+                    
                     Toggle(isOn: $darkMode) {
                         Label("Dark Mode", systemImage: "moon")
                     }
-                    .toggleStyle(SwitchToggleStyle(tint: .blue))
                 }
-
-                // MARK: About section.
+                
+                // About Section
                 Section(header: Text("About")) {
                     HStack {
-                        Text("Version")
+                        Label("Version", systemImage: "info.circle")
                         Spacer()
-                        Text("1.0.0")
-                            .foregroundStyle(.secondary)
+                        Text("1.0.0").foregroundStyle(.secondary)
                     }
                 }
-
+                
                 // MARK: Logs the user out through the shared auth view model.
                 Section {
                     Button("Log Out", role: .destructive) {
@@ -62,8 +57,9 @@ struct Settings: View {
                     .disabled(authViewModel.isLoading)
                 }
             }
+            
             .navigationTitle("Settings")
-
+            
             // MARK: Quick return path back to the signed-in dashboard.
             NavigationLink {
                 HomePage(authViewModel: authViewModel)
@@ -77,10 +73,13 @@ struct Settings: View {
                     .padding()
             }
             .offset(x: -150, y: 20)
-
+            
             Spacer()
+            
+            
+                .preferredColorScheme(darkMode ? .dark : .light)
+            
         }
-        .preferredColorScheme(darkMode ? .dark : .light)
     }
 }
 
