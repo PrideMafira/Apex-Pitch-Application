@@ -6,38 +6,96 @@
 //
 
 import SwiftUI
-import Foundation
-import SwiftData
+import Supabase
 
+
+// 2. Updated ProfileView
 struct ProfileView: View {
-    @AppStorage("username") var username: String = ""
-    @AppStorage("email") var email: String = ""
+    @State private var profile: UserProfile?
     @State private var isEditing = false
+    @State private var isLoading = false
+    
+    // Replace your old @AppStorage with these local states for editing
+    @State private var editedUsername = ""
+    @State private var editedEmail = ""
     
     var body: some View {
         Form {
-            Section(header: Text("User Information")) {
-                if isEditing {
-                    TextField("Username", text: $username)
-                    TextField("Email", text: $email)
-                        .keyboardType(.emailAddress)
-                        .autocapitalization(.none)
-                } else {
-                    LabeledContent("Username", value: username)
-                    LabeledContent("Email", value: email)
+            if isLoading {
+                ProgressView("Loading profile...")
+            } else {
+                Section(header: Text("User Information")) {
+                    if isEditing {
+                        TextField("Full Name", text: $editedUsername)
+                        TextField("Email", text: $editedEmail)
+                            .keyboardType(.emailAddress)
+                            .textContentType(.emailAddress)
+                    } else {
+                        LabeledContent("Username", value: profile?.full_name ?? "Not set")
+                        LabeledContent("Email", value: profile?.email ?? "Not set")
+                    }
                 }
-            }
-            
-            Section {
-                Button(isEditing ? "Save Changes" : "Edit Profile") {
-                    isEditing.toggle()
+                
+                Section {
+                    Button(isEditing ? "Save Changes" : "Edit Profile") {
+                        if isEditing {
+                            Task { await updateProfile() }
+                        }
+                        isEditing.toggle()
+                    }
                 }
             }
         }
         .navigationTitle("Profile")
         .navigationBarTitleDisplayMode(.inline)
+        .task {
+            await fetchProfile()
+        }
+    }
+    
+    // 3. Logic to Fetch from Supabase
+    func fetchProfile() async {
+        isLoading = true
+        do {
+            let currentUser = try await supabase.auth.session.user
+            
+            let fetchedProfile: UserProfile = try await supabase
+                .from("profiles")
+                .select()
+                .eq("id", value: currentUser.id)
+                .single()
+                .execute()
+                .value
+            
+            self.profile = fetchedProfile
+            self.editedUsername = fetchedProfile.full_name ?? ""
+            self.editedEmail = fetchedProfile.email ?? ""
+        } catch {
+            print("Error: \(error)")
+        }
+        isLoading = false
+    }
+    
+    // 4. Logic to Update Supabase
+    func updateProfile() async {
+        guard let userId = profile?.id else { return }
+        
+        let updatedData = UserProfile(id: userId, full_name: editedUsername, email: editedEmail)
+        
+        do {
+            try await supabase
+                .from("profiles")
+                .update(updatedData)
+                .eq("id", value: userId)
+                .execute()
+            
+            self.profile = updatedData
+        } catch {
+            print("Update failed: \(error)")
+        }
     }
 }
+
 
 
 #Preview {
