@@ -9,7 +9,6 @@ import SwiftUI
 import Supabase
 
 
-// 2. Updated ProfileView
 struct ProfileView: View {
     @State private var profile: UserProfile?
     @State private var isEditing = false
@@ -53,7 +52,7 @@ struct ProfileView: View {
         }
     }
     
-    // 3. Logic to Fetch from Supabase
+    //MARK: Logic to Fetch data from Supabase
     func fetchProfile() async {
         isLoading = true
         do {
@@ -76,7 +75,7 @@ struct ProfileView: View {
         isLoading = false
     }
     
-    // 4. Logic to Update Supabase
+    //MARK: Logic to Update Supabase
     func updateProfile() async {
         guard let userId = profile?.id else { return }
         
