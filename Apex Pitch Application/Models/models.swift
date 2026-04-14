@@ -121,3 +121,10 @@ struct WebView: UIViewRepresentable {
         uiView.load(request)
     }
 }
+
+//MARK:  Display user profile from Supabase to In-app settings
+struct UserProfile: Codable {
+    let id: UUID
+    var full_name: String?
+    var email: String?
+}
