@@ -1,18 +1,17 @@
-//
-//  AddNewNotes.swift
-//  Apex Pitch Application
-//
-//  Created by admin on 30/3/2026.
-//
+////
+////  AddNewNotes.swift
+////  Apex Pitch Application
+////
+////  Created by admin on 30/3/2026.
+////
 import SwiftUI
-
 
 struct AddFeedbackNoteView: View {
     @Environment(\.dismiss) private var dismiss
+    
     @State private var title = ""
-    @State private var category: FeedbackNote.Category = .idea
+    @State private var category: NoteCategory = .idea
     @State private var source = ""
-    @State private var date = Date()
     @State private var feedback = ""
     @State private var actionItems = ""
     
@@ -20,20 +19,19 @@ struct AddFeedbackNoteView: View {
     var onSave: (FeedbackNote) -> Void
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             Form {
                 Section("Basic Info") {
                     TextField("Title", text: $title)
+                        .autocorrectionDisabled()
                     
-                    //MARK: Lets the user classify the note using the available categories.
                     Picker("Category", selection: $category) {
-                        ForEach(FeedbackNote.Category.allCases, id: \.self) { item in
-                            Text(item.rawValue).tag(item)
+                        ForEach(NoteCategory.allCases, id: \.self) { item in
+                            Text(item.displayName).tag(item)
                         }
                     }
                     
                     TextField("Source / Person", text: $source)
-                    DatePicker("Date", selection: $date, displayedComponents: [.date, .hourAndMinute])
                 }
                 
                 //MARK: Main text area for the feedback the user received.
@@ -51,32 +49,28 @@ struct AddFeedbackNoteView: View {
             .navigationTitle("New Feedback Note")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Cancel") {
-                        dismiss()
-                    }
+                    Button("Cancel") { dismiss() }
                 }
                 
-                // Builds a FeedbackNote from the form values, sends it back, then closes the sheet.
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Save") {
                         let newNote = FeedbackNote(
+                            id: nil,
                             title: title,
                             category: category,
                             source: source,
-                            date: date,
                             feedback: feedback,
                             actionItems: actionItems
                         )
                         onSave(newNote)
                         dismiss()
                     }
-                    .disabled(title.isEmpty || feedback.isEmpty)
+                    .disabled(title.trimmingCharacters(in: .whitespaces).isEmpty || feedback.isEmpty)
                 }
             }
         }
     }
 }
-
 
 #Preview {
     AddFeedbackNoteView { _ in }
