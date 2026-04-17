@@ -1,7 +1,7 @@
 #  Apex Pitch Application
 
 ## Description
-- Every great venture begins with a single idea—a spark of potential that could change the world. Yet too often, that spark flickers out, not for lack of vision, but for lack of support, structure, and follow-through. How many brilliant thoughts have been lost to a forgotten note? How many game-changing conversations with mentors and investors have faded into vague memories?
+- Aspiring entrepreneurs lose countless ideas and investor connections simply because they lack a simple way to track them. Apex Pitch solves that, by helping users organize business ideas, mentor notes, and funding progress from concept to funded, all in one place. Start organizing your startup journey with Apex Pitch today!
 
 - That’s why we created Apex Pitch, so that aspiring entrepreneurs track their startup ideas and investor meetings.
 
