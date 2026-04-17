@@ -24,9 +24,9 @@ struct Idea: Identifiable, Equatable {
     var id: Int? // Supabase auto-generates this
     let startupName: String
     let ideaDescription: String
-    let fundingGoal: String
-    let fundingRaised: String
-    let type: Types
+    var fundingGoal: String
+    var fundingRaised: String
+    var type: Types
 }
 
 // MARK: Mirrors the Supabase row shape used when reading and writing ideas. (TabPage)
@@ -47,7 +47,11 @@ extension Idea {
         self.ideaDescription = record.description ?? ""
         self.fundingGoal = record.fundingGoal.flatMap { Self.numberFormatter.string(for: $0) } ?? ""
         self.fundingRaised = record.fundingRaised.flatMap { Self.numberFormatter.string(for: $0) } ?? ""
-        self.type = Types(rawValue: record.stage ?? "") ?? .concepts
+
+        let inferredStage = Types(rawValue: record.stage ?? "") ?? .concepts
+        let goal = record.fundingGoal ?? 0
+        let raised = record.fundingRaised ?? 0
+        self.type = (goal > 0 && raised >= goal) ? .funded : inferredStage
     }
     
     // Converts the local idea model back into the payload expected by Supabase.
@@ -68,6 +72,18 @@ extension Idea {
         formatter.maximumFractionDigits = 2
         return formatter
     }()
+
+    var fundingGoalValue: Double {
+        Double(fundingGoal) ?? 0
+    }
+
+    var fundingRaisedValue: Double {
+        Double(fundingRaised) ?? 0
+    }
+
+    static func formattedAmount(_ value: Double) -> String {
+        numberFormatter.string(for: value) ?? String(format: "%.2f", value)
+    }
 }
 
 
@@ -294,3 +310,5 @@ final class FeedbackStore: ObservableObject {
         }
     }
 }
+
+

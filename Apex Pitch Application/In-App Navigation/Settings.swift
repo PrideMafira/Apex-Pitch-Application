@@ -45,9 +45,9 @@ struct Settings: View {
                         Label("Profile", systemImage: "person.circle")
                     }
                     
-                    NavigationLink(destination: Text("Change Password View")) {
-                        Label("Change Password", systemImage: "lock")
-                    }
+                    //                    NavigationLink(destination: Text("Change Password View")) {
+                    //                        Label("Change Password", systemImage: "lock")
+                    //                    }
                 }
                 
                 // Preferences Section
