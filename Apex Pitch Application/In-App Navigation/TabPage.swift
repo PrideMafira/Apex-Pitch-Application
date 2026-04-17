@@ -61,9 +61,9 @@ struct TabPage: View {
                 } else {
                     ScrollView {
                         LazyVStack(spacing: 16) {
-                            ForEach(filteredIdeas) { idea in
+                            ForEach(filteredIdeaIndices, id: \.self) { index in
                                 //MARK: Each card is rendered by a helper view to keep this screen readable.
-                                IdeaRow(idea: idea)
+                                IdeaRow(idea: $ideas[index])
                             }
                             .padding(.horizontal)
                         }
@@ -124,11 +124,16 @@ struct TabPage: View {
         // Keeps the tab bar logic simple by deriving the visible list from the full dataset.
         ideas.filter { $0.type == selectedTab }
     }
+    
+    private var filteredIdeaIndices: [Int] {
+        ideas.indices.filter { ideas[$0].type == selectedTab }
+    }
 }
 
 //MARK: Visual representation of a single idea in the list.
 struct IdeaRow: View {
-    let idea: Idea
+    @Binding var idea: Idea
+    @State private var showingUpdateRaised = false
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -136,6 +141,15 @@ struct IdeaRow: View {
                 Text(idea.startupName)
                     .font(.headline)
                 Spacer()
+                Button {
+                    showingUpdateRaised = true
+                } label: {
+                    Image(systemName: "pencil")
+                        .foregroundColor(.blue)
+                        .padding(6)
+                        .background(Color.blue.opacity(0.1))
+                        .clipShape(Circle())
+                }
                 Text(idea.type.rawValue)
                     .font(.caption)
                     .padding(.horizontal, 8)
@@ -157,9 +171,9 @@ struct IdeaRow: View {
                 }
                 Spacer()
                 
-                let goal = Double(idea.fundingGoal) ?? 0
-                let raised = Double(idea.fundingRaised) ?? 0
-                let progress = goal > 0 ? raised / goal : 0
+                let goal = idea.fundingGoalValue
+                let raised = idea.fundingRaisedValue
+                let progress = goal > 0 ? min(max(raised / goal, 0), 1) : 0
                 
                 VStack(alignment: .trailing) {
                     Text("\(Int(progress * 100))%").font(.caption).foregroundColor(.blue)
@@ -169,6 +183,9 @@ struct IdeaRow: View {
         }
         .padding()
         .background(RoundedRectangle(cornerRadius: 12).fill(Color(.systemBackground)).shadow(radius: 2))
+        .sheet(isPresented: $showingUpdateRaised) {
+            UpdateFundingRaisedView(idea: $idea)
+        }
     }
 }
 
