@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-/// Authentication screen for existing users.
 struct SignIn: View {
     // Shared auth object so the view can trigger sign-in and react to loading or error changes.
     @ObservedObject var authViewModel: AuthViewModel

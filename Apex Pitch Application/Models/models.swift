@@ -21,7 +21,7 @@ enum Types: String, CaseIterable, Codable {
 }
 
 struct Idea: Identifiable, Equatable {
-    var id: Int? // Supabase auto-generates this
+    var id: Int? 
     let startupName: String
     let ideaDescription: String
     var fundingGoal: String
@@ -211,7 +211,7 @@ struct FeedbackNote: Identifiable, Codable {
         try container.encode(feedback, forKey: .feedback)
         try container.encode(actionItems, forKey: .actionItems)
         
-        // Let Supabase/Postgres set the timestamp when inserting a new row.
+        // Let Supabase set the timestamp when inserting a new row.
         if let date {
             try container.encode(date, forKey: .date)
         }
@@ -235,7 +235,7 @@ struct FeedbackNote: Identifiable, Codable {
 final class FeedbackStore: ObservableObject {
     @Published var notes: [FeedbackNote] = []
     
-    // Fetch notes from the "notes" table
+    // Fetch notes from the "notes" table in supabase
     func fetchNotes() async {
         do {
             let fetchedNotes: [FeedbackNote] = try await supabase.from("notes")

@@ -6,7 +6,7 @@ import Supabase
 struct UpdateFundingRaisedView: View {
     // MARK: - Properties
     @Environment(\.dismiss) private var dismiss
-    @Binding var idea: Idea // Binding allows changes to sync back to the parent view
+    @Binding var idea: Idea
     
     // MARK: - State
     @State private var amountReceived: String = ""
@@ -51,8 +51,9 @@ struct UpdateFundingRaisedView: View {
                     Button {
                         Task { await save() }
                     } label: {
+                        // Show spinner during network request
                         if isSaving {
-                            ProgressView() // Show spinner during network request
+                            ProgressView()
                         } else {
                             Text("Update Amount Raised")
                         }
@@ -109,14 +110,14 @@ struct UpdateFundingRaisedView: View {
     
     // MARK: - Helper Methods
     
-    /// Calculates a 0.0 to 1.0 progress value for the goal
+    // Calculates a 0.0 to 1.0 progress value for the goal
     private func progress(forRaised raised: Double) -> Double {
         let goal = idea.fundingGoalValue
         guard goal > 0 else { return 0 }
         return min(max(raised / goal, 0), 1)
     }
     
-    /// Orchestrates the Supabase network requests
+    //Executes the Supabase network requests
     @MainActor
     private func save() async {
         // Validation Check
@@ -131,7 +132,7 @@ struct UpdateFundingRaisedView: View {
         }
         
         isSaving = true
-        defer { isSaving = false } // Ensures spinner stops even if request fails
+        defer { isSaving = false }
         
         let newRaised = idea.fundingRaisedValue + amount
         // Determine if this update pushes the idea into the "Funded" status

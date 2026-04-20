@@ -13,7 +13,7 @@ struct Settings: View {
     @ObservedObject var authViewModel: AuthViewModel
     @State private var notificationsEnabled = true
     @AppStorage("darkMode") var darkMode: Bool = false
-    @Environment(\.dismiss) var dismiss // Used to go back home
+    @Environment(\.dismiss) var dismiss 
     
     //Local state to hold data fetched from Supabase
     @State private var userName: String = "Loading..."
