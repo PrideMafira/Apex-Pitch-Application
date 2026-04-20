@@ -61,9 +61,9 @@ struct TabPage: View {
                 } else {
                     ScrollView {
                         LazyVStack(spacing: 16) {
-                            ForEach(filteredIdeaIndices, id: \.self) { index in
+                            ForEach(filteredIdeas) { idea in
                                 //MARK: Each card is rendered by a helper view to keep this screen readable.
-                                IdeaRow(idea: $ideas[index])
+                                IdeaRow(idea: idea)
                             }
                             .padding(.horizontal)
                         }
@@ -108,7 +108,7 @@ struct TabPage: View {
         isLoading = true
         do {
             let fetched: [SupabaseIdeaRecord] = try await supabase
-                .from("Ideas Table") // Ensure this matches Supabase exactly
+                .from("Ideas Table")
                 .select()
                 .execute()
                 .value
@@ -121,19 +121,13 @@ struct TabPage: View {
     }
     
     private var filteredIdeas: [Idea] {
-        // Keeps the tab bar logic simple by deriving the visible list from the full dataset.
         ideas.filter { $0.type == selectedTab }
-    }
-    
-    private var filteredIdeaIndices: [Int] {
-        ideas.indices.filter { ideas[$0].type == selectedTab }
     }
 }
 
 //MARK: Visual representation of a single idea in the list.
 struct IdeaRow: View {
-    @Binding var idea: Idea
-    @State private var showingUpdateRaised = false
+    let idea: Idea
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -141,15 +135,6 @@ struct IdeaRow: View {
                 Text(idea.startupName)
                     .font(.headline)
                 Spacer()
-                Button {
-                    showingUpdateRaised = true
-                } label: {
-                    Image(systemName: "pencil")
-                        .foregroundColor(.blue)
-                        .padding(6)
-                        .background(Color.blue.opacity(0.1))
-                        .clipShape(Circle())
-                }
                 Text(idea.type.rawValue)
                     .font(.caption)
                     .padding(.horizontal, 8)
@@ -171,9 +156,9 @@ struct IdeaRow: View {
                 }
                 Spacer()
                 
-                let goal = idea.fundingGoalValue
-                let raised = idea.fundingRaisedValue
-                let progress = goal > 0 ? min(max(raised / goal, 0), 1) : 0
+                let goal = Double(idea.fundingGoal) ?? 0
+                let raised = Double(idea.fundingRaised) ?? 0
+                let progress = goal > 0 ? raised / goal : 0
                 
                 VStack(alignment: .trailing) {
                     Text("\(Int(progress * 100))%").font(.caption).foregroundColor(.blue)
@@ -183,9 +168,6 @@ struct IdeaRow: View {
         }
         .padding()
         .background(RoundedRectangle(cornerRadius: 12).fill(Color(.systemBackground)).shadow(radius: 2))
-        .sheet(isPresented: $showingUpdateRaised) {
-            UpdateFundingRaisedView(idea: $idea)
-        }
     }
 }
 

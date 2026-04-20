@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-/// First screen shown to signed-out users before entering the auth flow.
 struct WelcomePage: View {
     @ObservedObject var authViewModel: AuthViewModel
     @AppStorage("darkMode") var darkMode: Bool = false
@@ -15,7 +14,6 @@ struct WelcomePage: View {
     var body: some View {
         NavigationStack {
             VStack {
-                // Hero branding for the app's landing experience.
                 Image("appIcon2")
                     .resizable()
                     .scaledToFit()
@@ -30,8 +28,7 @@ struct WelcomePage: View {
                     .padding()
             }
             .padding()
-            
-            // Moves the user into the sign-in flow while preserving the shared auth view model.
+        
             NavigationLink {
                 SignIn(authViewModel: authViewModel)
             } label: {
