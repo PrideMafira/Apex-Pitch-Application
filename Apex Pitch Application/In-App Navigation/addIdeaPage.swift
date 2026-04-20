@@ -76,7 +76,7 @@ struct addIdeaPage: View {
                         }
                     } label: {
                         if isSaving {
-                            // Replaces the button title while the request is still in flight.
+                            // Replaces the button title while the request is still in process.
                             ProgressView()
                         } else {
                             Text("Add Idea")

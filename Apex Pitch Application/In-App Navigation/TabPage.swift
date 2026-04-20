@@ -108,7 +108,7 @@ struct TabPage: View {
         isLoading = true
         do {
             let fetched: [SupabaseIdeaRecord] = try await supabase
-                .from("Ideas Table") // Ensure this matches Supabase exactly
+                .from("Ideas Table")
                 .select()
                 .execute()
                 .value
@@ -121,7 +121,6 @@ struct TabPage: View {
     }
     
     private var filteredIdeas: [Idea] {
-        // Keeps the tab bar logic simple by deriving the visible list from the full dataset.
         ideas.filter { $0.type == selectedTab }
     }
 }

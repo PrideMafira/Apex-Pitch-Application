@@ -7,5 +7,4 @@
 import Supabase
 import Foundation
 
-// Shared Supabase client configured once and reused across authentication and data screens.
 let supabase = SupabaseClient(supabaseURL: URL(string: "https://tkdvjvwisqxnkrruvfne.supabase.co")!, supabaseKey: "sb_publishable_eLdZDtD4c-yUIAaroUczdg_pDwVmxGp")

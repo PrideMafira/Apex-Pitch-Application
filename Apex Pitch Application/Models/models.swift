@@ -20,7 +20,7 @@ enum Types: String, CaseIterable, Codable {
 }
 
 struct Idea: Identifiable, Equatable {
-    var id: Int? // Supabase auto-generates this
+    var id: Int?
     let startupName: String
     let ideaDescription: String
     let fundingGoal: String
