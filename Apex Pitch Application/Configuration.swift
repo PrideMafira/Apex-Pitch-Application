@@ -1,6 +1,6 @@
 import Foundation
 
-//Reads typed values from the app configuration embedded in the bundle.
+// Reads typed values from the app configuration embedded in the bundle.
 enum Configuration {
     enum Error: Swift.Error {
         case missingKey, invalidValue

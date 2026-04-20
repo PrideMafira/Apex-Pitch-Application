@@ -10,6 +10,7 @@ import SwiftUI
 struct SignIn: View {
     // Shared auth object so the view can trigger sign-in and react to loading or error changes.
     @ObservedObject var authViewModel: AuthViewModel
+    // Local form state for the sign-in request.
     @State private var email = ""
     @State private var password = ""
     @State private var rememberMe = false

@@ -76,7 +76,6 @@ struct addIdeaPage: View {
                         }
                     } label: {
                         if isSaving {
-                            // Replaces the button title while the request is still in process.
                             ProgressView()
                         } else {
                             Text("Add Idea")
@@ -125,13 +124,17 @@ struct addIdeaPage: View {
                 return
             }
             
-            try await supabase
+            // Insert and return the inserted row so we immediately get the generated `id`.
+            let inserted: SupabaseIdeaRecord = try await supabase
                 .from("Ideas Table")
                 .insert(record)
+                .select()
+                .single()
                 .execute()
+                .value
             
             // Mirror the remote insert locally so the user sees the new card immediately.
-            ideas.append(newIdea)
+            ideas.append(Idea(record: inserted))
             dismiss()
         } catch {
             let message = error.localizedDescription
