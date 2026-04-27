@@ -8,7 +8,6 @@
 import SwiftUI
 
 @main
-/// App entry point that loads the SwiftUI root view.
 struct Apex_Pitch_ApplicationApp: App {
     var body: some Scene {
         WindowGroup {

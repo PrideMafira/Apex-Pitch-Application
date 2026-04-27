@@ -10,7 +10,7 @@ import Supabase
 internal import Combine
 
 @MainActor
-/// Centralized authentication state and Supabase auth actions for the app.
+
 class AuthViewModel: ObservableObject {
     // Stores the active Supabase session.
     @Published var session: Session?

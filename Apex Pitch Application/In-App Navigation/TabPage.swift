@@ -108,7 +108,7 @@ struct TabPage: View {
         isLoading = true
         do {
             let fetched: [SupabaseIdeaRecord] = try await supabase
-                .from("Ideas Table") // Ensure this matches Supabase exactly
+                .from("Ideas Table") 
                 .select()
                 .execute()
                 .value

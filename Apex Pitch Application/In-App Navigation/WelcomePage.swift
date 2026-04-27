@@ -28,7 +28,7 @@ struct WelcomePage: View {
                     .padding()
             }
             .padding()
-        
+
             NavigationLink {
                 SignIn(authViewModel: authViewModel)
             } label: {

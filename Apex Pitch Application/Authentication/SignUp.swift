@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct SignUp: View {
-    // Shared auth state so the screen can call sign-up and display auth feedback.
     @ObservedObject var authViewModel: AuthViewModel
     @State private var fullName = ""
     @State private var email = ""
